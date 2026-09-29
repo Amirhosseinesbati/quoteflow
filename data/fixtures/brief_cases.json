@@ -1,0 +1,22 @@
+[
+  {
+    "id": "clear-website",
+    "source_text": "Juniper Grove needs a six-page responsive website and analytics setup in twelve weeks. Budget: $18,000–$28,000. We can supply approved photography and a draft sitemap. Please address Avery Lee at avery@juniper-grove.example.com.",
+    "expected_explicit_deliverables": ["six-page responsive website", "analytics setup"],
+    "expected_missing": ["content owner", "final approval owner"]
+  },
+  {
+    "id": "ambiguous-timeline",
+    "source_text": "Tern & Tide would like a new shop by June, though the board note says October. We have not decided how many products will launch. We may consider inventory sync later; it is not requested for this phase.",
+    "expected_explicit_deliverables": ["new shop"],
+    "expected_missing": ["timeline conflict", "initial product quantity", "budget range"],
+    "expected_excluded": ["inventory sync"]
+  },
+  {
+    "id": "approval-revision",
+    "source_text": "Morrow Pantry asks for a brand identity and guidelines, plus a 15% discount. The team might later want packaging concepts but has not approved that scope. We can supply interview notes and need a quote before the September planning meeting.",
+    "expected_explicit_deliverables": ["brand identity", "guidelines"],
+    "expected_missing": ["budget range", "final approval owner"],
+    "expected_approval_trigger": "discount_above_threshold"
+  }
+]

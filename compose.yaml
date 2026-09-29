@@ -1,0 +1,84 @@
+name: quoteflow
+services:
+  db:
+    image: postgres:17.10-alpine3.22
+    environment:
+      POSTGRES_DB: quoteflow
+      POSTGRES_USER: quoteflow
+      POSTGRES_PASSWORD: ${DEMO_DB_PASSWORD:-quoteflow_local_only}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quoteflow -d quoteflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      MODE: ${MODE:-DEMO}
+      DATABASE_URL: postgresql+psycopg://quoteflow:${DEMO_DB_PASSWORD:-quoteflow_local_only}@db:5432/quoteflow
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:${QUOTEFLOW_PORT:-8080}}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:${QUOTEFLOW_PORT:-8080}/api}
+      SESSION_SECURE: ${SESSION_SECURE:-false}
+      APPROVAL_DISCOUNT_THRESHOLD: ${APPROVAL_DISCOUNT_THRESHOLD:-10.00}
+      DEFAULT_TAX_PERCENT: ${DEFAULT_TAX_PERCENT:-0.00}
+      DEFAULT_CONTINGENCY_PERCENT: ${DEFAULT_CONTINGENCY_PERCENT:-0.00}
+      PORTAL_TTL_DAYS: ${PORTAL_TTL_DAYS:-14}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      HUBSPOT_ACCESS_TOKEN: ${HUBSPOT_ACCESS_TOKEN:-}
+      HUBSPOT_ENABLED: ${HUBSPOT_ENABLED:-false}
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-quoteflow}
+      ASSET_DIR: /app/assets
+    volumes:
+      - proposal_assets:/app/assets
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["python", "-m", "quoteflow.cli", "run-worker"]
+    environment:
+      MODE: ${MODE:-DEMO}
+      DATABASE_URL: postgresql+psycopg://quoteflow:${DEMO_DB_PASSWORD:-quoteflow_local_only}@db:5432/quoteflow
+      HUBSPOT_ENABLED: ${HUBSPOT_ENABLED:-false}
+      HUBSPOT_ACCESS_TOKEN: ${HUBSPOT_ACCESS_TOKEN:-}
+      WORKER_POLL_SECONDS: ${WORKER_POLL_SECONDS:-10}
+      LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+      LANGSMITH_PROJECT: ${LANGSMITH_PROJECT:-quoteflow}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "127.0.0.1:${QUOTEFLOW_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  proposal_assets:

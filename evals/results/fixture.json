@@ -1,0 +1,21 @@
+{
+  "mode": "fixture",
+  "reference_date": "2026-09-28",
+  "counts": {
+    "catalog": 35,
+    "clients": 50,
+    "briefs": 120,
+    "quotes": 80,
+    "quote_versions": 180,
+    "handoffs": 30
+  },
+  "evaluation_cases": 90,
+  "development_cases": 30,
+  "held_out_cases": 60,
+  "checks_passed": true,
+  "failures": [],
+  "limits": [
+    "Behavioral access/token cases are definitions only in fixture mode.",
+    "Synthetic integrity does not establish model quality or human review."
+  ]
+}

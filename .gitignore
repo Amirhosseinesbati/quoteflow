@@ -1,0 +1,24 @@
+.env
+.env.*
+!.env.example
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+.pytest-tmp/
+**/.pytest_tmp/
+**/.ruff_cache/
+**/.mypy_cache/
+**/node_modules/
+**/dist/
+**/.cache/
+*.pyc
+*.db
+*.sqlite3
+data/generated/
+assets/
+tmp/
+coverage/
+*.log
+
+# Local product brief; excluded from the public portfolio repository.
+/05-quoteflow.md

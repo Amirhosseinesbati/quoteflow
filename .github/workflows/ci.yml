@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install locked dependencies
+        run: uv sync --project apps/api --frozen --all-extras
+      - name: Lint
+        run: uv run --project apps/api ruff check apps/api/src apps/api/tests
+      - name: Validate web API contract against OpenAPI
+        run: |
+          uv run --project apps/api python scripts/export_openapi.py openapi.json
+          node apps/web/scripts/check-openapi.mjs openapi.json
+      - name: Tests
+        run: uv run --project apps/api pytest apps/api/tests
+      - name: Generate and validate synthetic fixtures
+        run: |
+          uv run --project apps/api python scripts/generate_demo.py --output data/generated
+          uv run --project apps/api python evals/run.py --mode fixture
+      - name: Migrate, seed, and verify database counts
+        env:
+          DATABASE_URL: sqlite:///./ci_seed.db
+        run: |
+          uv run --project apps/api python -m quoteflow.cli init-demo --full
+          uv run --project apps/api python scripts/verify_seed.py
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: corepack enable
+      - run: corepack pnpm install --frozen-lockfile
+      - run: corepack pnpm lint
+      - run: corepack pnpm build

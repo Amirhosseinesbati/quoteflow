@@ -1,0 +1,294 @@
+{
+  "mode": "demo_extraction",
+  "split": "held_out",
+  "cases": 30,
+  "extractor": "DemoExtractor",
+  "dataset_seed": 90421,
+  "reference_date": "2026-09-28",
+  "catalog_version": "2026.1",
+  "predicted_requirements": 60,
+  "evidence_alignment": {
+    "aligned": 60,
+    "predicted": 60,
+    "rate": 1.0
+  },
+  "primary_deliverable_recall": {
+    "found": 30,
+    "labeled": 30,
+    "rate": 1.0
+  },
+  "unadjudicated_predictions": 30,
+  "full_requirement_precision": null,
+  "full_requirement_recall": null,
+  "material_fabrications": null,
+  "field_exact": {
+    "company": {
+      "correct": 30,
+      "total": 30
+    },
+    "contact": {
+      "correct": 30,
+      "total": 30
+    },
+    "email": {
+      "correct": 30,
+      "total": 30
+    },
+    "timeline": {
+      "correct": 30,
+      "total": 30
+    },
+    "budget": {
+      "correct": 30,
+      "total": 30
+    }
+  },
+  "case_results": [
+    {
+      "case_id": "extract-11",
+      "brief_id": "brief-055",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-12",
+      "brief_id": "brief-056",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-13",
+      "brief_id": "brief-057",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-14",
+      "brief_id": "brief-058",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-15",
+      "brief_id": "brief-059",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-16",
+      "brief_id": "brief-060",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-17",
+      "brief_id": "brief-067",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-18",
+      "brief_id": "brief-068",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-19",
+      "brief_id": "brief-069",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-20",
+      "brief_id": "brief-070",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-21",
+      "brief_id": "brief-071",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-22",
+      "brief_id": "brief-072",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-23",
+      "brief_id": "brief-077",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-24",
+      "brief_id": "brief-078",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-25",
+      "brief_id": "brief-079",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-26",
+      "brief_id": "brief-080",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-27",
+      "brief_id": "brief-081",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-28",
+      "brief_id": "brief-082",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-29",
+      "brief_id": "brief-083",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-30",
+      "brief_id": "brief-084",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-31",
+      "brief_id": "brief-089",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-32",
+      "brief_id": "brief-090",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-33",
+      "brief_id": "brief-091",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-34",
+      "brief_id": "brief-092",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-35",
+      "brief_id": "brief-093",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-36",
+      "brief_id": "brief-094",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-37",
+      "brief_id": "brief-095",
+      "primary_deliverable_found": true,
+      "aligned_spans": 1,
+      "unadjudicated_predictions": 0,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-38",
+      "brief_id": "brief-096",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-39",
+      "brief_id": "brief-105",
+      "primary_deliverable_found": true,
+      "aligned_spans": 3,
+      "unadjudicated_predictions": 2,
+      "expected_deliverable": null
+    },
+    {
+      "case_id": "extract-40",
+      "brief_id": "brief-106",
+      "primary_deliverable_found": true,
+      "aligned_spans": 2,
+      "unadjudicated_predictions": 1,
+      "expected_deliverable": null
+    }
+  ],
+  "limits": [
+    "Evidence alignment checks exact source offsets, not semantic support.",
+    "Primary deliverable recall covers one independently labeled phrase per held-out synthetic brief.",
+    "The labels do not exhaust supported requirements; all other predictions remain unadjudicated, so full requirement precision/recall and material fabrications cannot be calculated.",
+    "Connected-model quality and 10-proposal human review remain separate gates."
+  ]
+}
