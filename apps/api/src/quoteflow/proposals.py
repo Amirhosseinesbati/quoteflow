@@ -5,8 +5,11 @@ from __future__ import annotations
 import re
 from collections.abc import Sequence
 
+from sqlalchemy.orm import object_session
+
 from .extraction import explicit_scope_addition
 from .models import Brief, ServiceCatalogEntry
+from .studio import StudioSettings, studio_settings, template_text
 
 MATCH_TERMS = {
     "brand-discovery": ("brand", "identity"),
@@ -162,8 +165,10 @@ def draft_proposal(
             timeline = answer
     constraints = brief.extracted.get("constraints") or []
     assets = brief.extracted.get("supplied_assets") or []
+    db = object_session(brief)
+    studio = studio_settings(db, brief.workspace_id)[0] if db else StudioSettings()
     return {
-        "executive_summary": f"Arc & Field Studio proposes the {label.lower()} engagement for {client_name}, based on the supplied brief and the scope shown below.",
+        "executive_summary": template_text(studio.summary_template, studio=studio.studio_name, client=client_name, package=label.lower()),
         "objectives": [
             "Deliver the agreed scope with clear review checkpoints",
             "Give the client usable handover materials",
@@ -194,5 +199,5 @@ def draft_proposal(
             "Review the scope, assumptions, exclusions, and total",
             "Use the customer review page to acknowledge acceptance or request changes",
         ],
-        "terms": "Sample terms: work starts after a separate services agreement and agreed deposit. This proposal is not legal advice or a certified electronic signature.",
+        "terms": studio.terms,
     }

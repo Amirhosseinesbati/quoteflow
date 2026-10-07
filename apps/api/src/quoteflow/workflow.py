@@ -171,6 +171,8 @@ def _validate_proposal(state: QuoteFlowState) -> dict:
     with SessionLocal() as db:
         for version_id in state["option_ids"]:
             version = db.get(QuoteVersion, version_id)
+            if version is None:
+                raise ValueError("Proposal version is unavailable")
             if not required.issubset(version.proposal):
                 raise ValueError("Proposal is missing a required section")
     return {}
@@ -188,6 +190,8 @@ def _internal_review(state: QuoteFlowState) -> dict:
         raise ValueError("Choose one of the generated option IDs")
     with SessionLocal() as db:
         version = db.get(QuoteVersion, selected)
+        if version is None:
+            raise ValueError("Selected proposal version is unavailable")
         approval = db.scalar(
             select(Approval).where(
                 Approval.quote_version_id == selected, Approval.content_hash == version.content_hash
@@ -201,6 +205,8 @@ def _internal_review(state: QuoteFlowState) -> dict:
 def _render_version(state: QuoteFlowState) -> dict:
     with SessionLocal() as db:
         version = db.get(QuoteVersion, state["selected_version_id"])
+        if version is None:
+            raise ValueError("Selected proposal version is unavailable")
         asset = db.scalar(select(ProposalAsset).where(ProposalAsset.quote_version_id == version.id))
         if version.status in ("published", "accepted") and asset is not None:
             return {}
@@ -213,6 +219,8 @@ def _render_version(state: QuoteFlowState) -> dict:
     )
     with SessionLocal() as db:
         version = db.get(QuoteVersion, state["selected_version_id"])
+        if version is None:
+            raise ValueError("Selected proposal version is unavailable")
         asset = db.scalar(select(ProposalAsset).where(ProposalAsset.quote_version_id == version.id))
         if version.status not in ("published", "accepted") or asset is None:
             raise ValueError("Selected option has not been published")
@@ -222,6 +230,8 @@ def _render_version(state: QuoteFlowState) -> dict:
 def _customer_response(state: QuoteFlowState) -> dict:
     with SessionLocal() as db:
         quote = db.get(Quote, state["quote_id"])
+        if quote is None:
+            raise ValueError("Proposal quote is unavailable")
         if quote.status == "accepted":
             return {"response_status": "accepted"}
         if quote.status in ("declined", "revision_requested"):
@@ -235,6 +245,8 @@ def _customer_response(state: QuoteFlowState) -> dict:
     )
     with SessionLocal() as db:
         quote = db.get(Quote, state["quote_id"])
+        if quote is None:
+            raise ValueError("Proposal quote is unavailable")
         return {"response_status": quote.status}
 
 

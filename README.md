@@ -2,7 +2,7 @@
 
 > From client brief to approved proposal and project handoff.
 
-![QuoteFlow product interface](screenshots/05-options-1440.png)
+![QuoteFlow proposal workbench with synthetic demo data](docs/evidence/redesign-2026-10-07/QuoteFlow-dark-workbench.png)
 
 [Getting started](#getting-started) · [Architecture](docs/ARCHITECTURE.md) · [Evaluation](docs/EVALUATION.md) · [Security](docs/SECURITY.md)
 
@@ -26,7 +26,7 @@ FastAPI · React · LangGraph · PostgreSQL
 
 ### Evidence and scope
 
-31 backend tests and local browser journeys passed. The newest source has not been revalidated on Docker after a host storage failure. The included demo uses synthetic data and local simulators. Deployment and live-provider limits are documented in [implementation status](docs/IMPLEMENTATION_STATUS.md).
+49 backend tests and local browser journeys passed for the October workbench rollout. The newest source has not been revalidated on Docker after a host storage failure. The included demo uses synthetic data and local simulators. Deployment and live-provider limits are documented in [implementation status](docs/IMPLEMENTATION_STATUS.md).
 
 ## Getting started
 
@@ -84,3 +84,7 @@ With the API on port 8000 and Vite on port 5173, run the reproducible browser jo
 
 API contracts, architecture, operation, security, evaluation, deployment prerequisites, and honest completion status are in [docs](docs). Run the test commands in [HANDOVER.md](docs/HANDOVER.md) before using this as a customer pilot. No synthetic quality result should be presented as real-customer accuracy, and customer acceptance here is a workflow acknowledgement rather than a certified electronic signature.
 
+
+## Proposal workbench and appearance
+
+The compact workbench places brief evidence, catalog-priced options, selected version and scope editor together. Light/Dark/System preserve drafts and prices; the customer document retains its fixed printable palette. Read [the current workbench report](docs/WORKBENCH_2026-10-07.md), [client setup](docs/CLIENT_SETUP.md) and [synthetic screenshots/PDF evidence](docs/evidence/redesign-2026-10-07/README.md) for configuration, verification and remaining integration/font limits.

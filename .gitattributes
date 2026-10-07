@@ -1,0 +1,3 @@
+# Preserve PDF offsets and exact evidence hashes on every checkout platform.
+*.pdf binary
+*.png binary

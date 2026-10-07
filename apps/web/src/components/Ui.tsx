@@ -1,13 +1,25 @@
 import { AlertCircle, CheckCircle2, FileText, LoaderCircle } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { humanStatus } from '../lib/format'
 
 export function StatusBadge({ status }: { status?: string | null }) {
   const normalized = (status || 'draft').toLowerCase()
-  const tone = /approved|accepted|completed|active|answered/.test(normalized) ? 'green' :
+  const tone = /^(approved|accepted|completed|active|answered)$/.test(normalized) ? 'green' :
     /pending|review|awaiting|needs/.test(normalized) ? 'amber' :
       /rejected|declined|expired|failed/.test(normalized) ? 'coral' : ''
   return <span className={`badge ${tone}`}>{humanStatus(status)}</span>
+}
+
+export function Dialog({ children, labelId, onClose }: { children: ReactNode; labelId: string; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null)
+  useLayoutEffect(() => {
+    const dialog = ref.current
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    dialog?.showModal()
+    return () => { dialog?.close(); if (opener?.isConnected) opener.focus() }
+  }, [])
+  return <dialog ref={ref} className="studio-dialog panel" aria-labelledby={labelId} onCancel={(event) => { event.preventDefault(); onClose() }} onClick={(event) => { if (event.target === event.currentTarget) { const bounds = event.currentTarget.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) onClose() } }}>{children}</dialog>
 }
 
 export function Notice({ children, tone = 'info', onRetry }: { children: ReactNode; tone?: 'info' | 'error' | 'success'; onRetry?: () => void }) {
@@ -28,7 +40,7 @@ export function EmptyState({ icon, title, description, action }: { icon?: ReactN
 
 export function LoadingPanel({ label = 'Loading workspace…' }: { label?: string }) {
   return <div className="panel p-5" role="status" aria-live="polite">
-    <div className="flex items-center gap-2 text-xs text-[#777d75] mb-5"><LoaderCircle size={15} className="animate-spin" />{label}</div>
+    <div className="flex items-center gap-2 text-xs text-secondary mb-5"><LoaderCircle size={15} className="animate-spin" />{label}</div>
     <div className="skeleton h-5 w-1/3 mb-4" /><div className="skeleton h-3 w-full mb-2" /><div className="skeleton h-3 w-5/6 mb-2" /><div className="skeleton h-3 w-2/3" />
   </div>
 }

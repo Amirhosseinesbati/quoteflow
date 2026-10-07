@@ -47,6 +47,7 @@ from .models import (
     ServiceCatalogVersion,
     SessionRecord,
     User,
+    WorkspacePreference,
     now,
 )
 from .pdf import render_proposal_pdf
@@ -83,6 +84,7 @@ from .services import (
     serialize_version,
     timestamp,
 )
+from .studio import StudioUpdate, document_settings, studio_settings
 from .workflow import build_workflow, invoke_job, make_checkpointer
 
 
@@ -108,7 +110,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[get_settings().public_base_url],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Content-Type"],
 )
 
@@ -158,6 +160,7 @@ def _approval_json(item: Approval, db: Session) -> dict:
         "created_at": timestamp(item.created_at),
         "decided_at": timestamp(item.decided_at),
         "total": str(version.total) if version else None,
+        "currency": document_settings(version.proposal)["currency"] if version else "USD",
     }
 
 
@@ -182,6 +185,33 @@ def health(db: Session = Depends(get_db)):
         "mode": get_settings().mode.upper(),
         "synthetic": get_settings().mode.upper() == "DEMO",
     }
+
+
+@app.get("/api/studio-settings")
+def get_studio_settings(user: User = Depends(current_user), db: Session = Depends(get_db)):
+    settings, revision = studio_settings(db, user.workspace_id)
+    return {"settings": settings.model_dump(), "revision": revision}
+
+
+@app.put("/api/studio-settings")
+def update_studio_settings(
+    payload: StudioUpdate, user: User = Depends(require_role("admin")), db: Session = Depends(get_db)
+):
+    # Lock the workspace row as well, including when no preferences row exists yet.
+    from .models import Workspace
+
+    db.scalar(select(Workspace).where(Workspace.id == user.workspace_id).with_for_update())
+    record = db.get(WorkspacePreference, user.workspace_id, populate_existing=True)
+    revision = record.revision if record else 0
+    if revision != payload.expected_revision:
+        raise HTTPException(409, "Studio settings changed in another session. Reload before saving.")
+    if record is None:
+        record = WorkspacePreference(workspace_id=user.workspace_id)
+        db.add(record)
+    record.settings = payload.settings.model_dump()
+    record.revision = revision + 1
+    db.commit()
+    return {"settings": record.settings, "revision": record.revision}
 
 
 @app.post("/api/auth/demo")
@@ -556,9 +586,10 @@ def publish(
         approval is None or approval.status != "approved"
     ):
         raise HTTPException(409, "Current quote version requires internal approval")
-    pdf_bytes = render_proposal_pdf(
-        version, client_name=db.get(Client, quote.client_id).name, brief_reference=quote.brief_id
-    )
+    client = db.get(Client, quote.client_id)
+    if client is None:
+        raise HTTPException(404, "Client not found")
+    pdf_bytes = render_proposal_pdf(version, client_name=client.name, brief_reference=quote.brief_id)
     asset_dir = Path(get_settings().asset_dir).resolve() / user.workspace_id
     asset_dir.mkdir(parents=True, exist_ok=True)
     asset_path = asset_dir / f"{version.id}.pdf"
@@ -664,10 +695,15 @@ def download_pdf(
 def view_portal(token: str, db: Session = Depends(get_db)):
     record = portal_record(db, token)
     client = db.get(Client, record.client_id)
+    if client is None:
+        raise HTTPException(410, "Review client is unavailable")
     if record.kind == "clarification":
         brief = db.get(Brief, record.brief_id)
+        if brief is None:
+            raise HTTPException(410, "Review brief is unavailable")
         return {
             "kind": "clarification",
+            "studio_name": studio_settings(db, record.workspace_id)[0].studio_name,
             "client_name": client.name,
             "brief": serialize_brief(db, brief, detail=True),
             "clarifications": [serialize_clarification(item) for item in brief.clarifications],
@@ -676,6 +712,8 @@ def view_portal(token: str, db: Session = Depends(get_db)):
             "synthetic": get_settings().mode.upper() == "DEMO",
         }
     version = db.get(QuoteVersion, record.quote_version_id)
+    if version is None:
+        raise HTTPException(410, "Review version is unavailable")
     return {
         "kind": "review",
         "client_name": client.name,
@@ -710,13 +748,19 @@ def portal_response(token: str, payload: PortalDecision, db: Session = Depends(g
     if record.kind != "review":
         raise HTTPException(403, "Link is for clarification only")
     version = db.get(QuoteVersion, record.quote_version_id)
+    if version is None:
+        raise HTTPException(410, "Review version is unavailable")
     _locked_scoped_quote(db, version.quote_id, record.workspace_id)
     # Another request may have replaced the token or accepted the quote while
     # this request waited on the quote lock. Recheck after acquiring it.
     db.expire_all()
     record = portal_record(db, token)
     version = db.get(QuoteVersion, record.quote_version_id)
+    if version is None:
+        raise HTTPException(410, "Review version is unavailable")
     quote = db.get(Quote, version.quote_id)
+    if quote is None:
+        raise HTTPException(410, "Review quote is unavailable")
     if record.status == "accepted" and payload.decision == "accepted":
         existing = db.scalar(
             select(ProjectHandoff).where(ProjectHandoff.quote_version_id == version.id)
@@ -846,8 +890,15 @@ def list_outbox(user: User = Depends(require_role("admin")), db: Session = Depen
     }
 
 
-def _catalog_json(db: Session, workspace_id: str) -> dict:
-    version = latest_catalog(db, workspace_id)
+def _catalog_json(db: Session, workspace_id: str, version_id: str | None = None) -> dict:
+    version = latest_catalog(db, workspace_id) if not version_id else db.scalar(
+        select(ServiceCatalogVersion).where(
+            ServiceCatalogVersion.id == version_id,
+            ServiceCatalogVersion.workspace_id == workspace_id,
+        )
+    )
+    if version is None:
+        raise HTTPException(404, "Catalog version not found")
     services = catalog_entries(db, version.id)
     return {
         "version": {"id": version.id, "number": version.number},
@@ -869,8 +920,8 @@ def _catalog_json(db: Session, workspace_id: str) -> dict:
 
 @app.get("/api/catalog")
 @app.get("/api/catalog/services")
-def get_catalog(user: User = Depends(current_user), db: Session = Depends(get_db)):
-    return _catalog_json(db, user.workspace_id)
+def get_catalog(version_id: str | None = None, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    return _catalog_json(db, user.workspace_id, version_id)
 
 
 def _new_catalog_version(

@@ -22,3 +22,9 @@ coverage/
 
 # Local product brief; excluded from the public portfolio repository.
 /05-quoteflow.md
+
+# Private local publication receipts
+**/library-files.json
+**/library-status.json
+**/library-manifest.json
+**/upload-manifest.json

@@ -6,7 +6,7 @@ import json
 import sys
 import time
 from collections.abc import Callable
-from contextlib import suppress
+from contextlib import AbstractContextManager, suppress
 
 from .config import get_settings
 from .db import SessionLocal, engine
@@ -14,7 +14,7 @@ from .worker import process_outbox_once
 from .workflow import build_workflow, make_checkpointer, recover_expired_jobs
 
 
-def _close_checkpointer(manager: object | None) -> None:
+def _close_checkpointer(manager: AbstractContextManager | None) -> None:
     if manager is not None:
         with suppress(Exception):
             manager.__exit__(None, None, None)

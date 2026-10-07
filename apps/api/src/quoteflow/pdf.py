@@ -21,6 +21,7 @@ from reportlab.platypus import (
 )
 
 from .models import QuoteVersion
+from .studio import document_settings, template_text
 
 INK = colors.HexColor("#272627")
 CORAL = colors.HexColor("#c56b58")
@@ -33,6 +34,13 @@ def _paragraph(text: object, style: ParagraphStyle) -> Paragraph:
 
 def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_reference: str) -> bytes:
     output = BytesIO()
+    identity = document_settings(version.proposal)
+    accent = colors.HexColor(identity["accent_color"])
+    currency = identity["currency"]
+
+    def currency_amount(value):
+        return f"{currency} {value:,.2f}"
+
     styles = getSampleStyleSheet()
     styles.add(
         ParagraphStyle(
@@ -51,7 +59,7 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
             fontName="Helvetica-Bold",
             fontSize=11,
             leading=14,
-            textColor=CORAL,
+            textColor=accent,
             spaceBefore=18,
             spaceAfter=7,
         )
@@ -75,22 +83,28 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
         )
     )
     styles.add(ParagraphStyle(name="QRight", parent=styles["QSmall"], alignment=TA_RIGHT))
+    styles.add(ParagraphStyle(name="QBrand", parent=styles["QSmall"], fontName="Helvetica-Bold", fontSize=9, leading=10))
+    styles.add(ParagraphStyle(name="QList", parent=styles["QBody"], leftIndent=14, firstLineIndent=-12, spaceAfter=8))
 
     def page(canvas, doc):
         canvas.saveState()
         width, height = doc.pagesize
         canvas.setFillColor(PAPER)
         canvas.rect(0, 0, width, height, fill=1, stroke=0)
-        canvas.setStrokeColor(CORAL)
+        canvas.setStrokeColor(accent)
         canvas.line(46, height - 55, width - 46, height - 55)
         canvas.setFont("Helvetica-Bold", 9)
         canvas.setFillColor(INK)
-        canvas.drawString(46, height - 43, "ARC & FIELD STUDIO  /  PROPOSAL")
+        brand = _paragraph(identity["studio_name"], styles["QBrand"])
+        brand.wrap(width - 190, 36)
+        brand.drawOn(canvas, 46, height - 50)
+        canvas.setFont("Helvetica", 8)
+        canvas.drawRightString(width - 46, height - 43, "DEMO PROPOSAL" if identity["synthetic"] else "PROPOSAL")
         canvas.setFont("Helvetica", 8)
         canvas.drawString(
             46,
             31,
-            f"Quote {version.quote_id} · Version {version.number} · Catalog {version.catalog_version_id} · {version.content_hash[:10]}",
+            f"QF-{version.quote_id[:8]} / v{version.number} / Catalog {version.catalog_version_id[:8]} / {version.content_hash[:10]}",
         )
         canvas.drawRightString(width - 46, 31, f"{doc.page}")
         canvas.restoreState()
@@ -116,7 +130,8 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
     doc.addPageTemplates(PageTemplate(id="proposal", frames=frame, onPage=page))
     story = [
         Spacer(1, 18),
-        _paragraph(f"A clear path for {client_name}", styles["QTitle"]),
+        _paragraph(template_text(identity["title_template"], studio=identity["studio_name"], client=client_name, package=version.label.lower()), styles["QTitle"]),
+        _paragraph(f"Prepared for {client_name}", styles["QBody"]),
         _paragraph(f"{version.label} proposal · Reference {brief_reference}", styles["QBody"]),
         Spacer(1, 8),
     ]
@@ -138,10 +153,14 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
         value = proposal.get(key)
         if not value:
             continue
-        body = "; ".join(map(str, value)) if isinstance(value, list) else str(value)
-        story.append(
-            KeepTogether([_paragraph(title, styles["QHeading"]), _paragraph(body, styles["QBody"])])
-        )
+        # Keep the heading with the first line, while allowing long sections to paginate.
+        story.append(_paragraph(title, styles["QHeadingNext"]))
+        if isinstance(value, list):
+            for index, item in enumerate(value, start=1):
+                prefix = f"{index}. " if key in ("milestones", "acceptance_steps") else "- "
+                story.append(_paragraph(prefix + str(item), styles["QList"]))
+        else:
+            story.append(_paragraph(value, styles["QBody"]))
     story.append(_paragraph("Investment", styles["QHeadingNext"]))
     rows = [["Service", "Qty", "Rate", "Amount"]]
     for line in version.lines:
@@ -152,8 +171,8 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
                     styles["QSmall"],
                 ),
                 str(line.quantity),
-                f"${line.unit_price:,.2f}",
-                f"${line.line_total:,.2f}",
+                _paragraph(currency_amount(line.unit_price), styles["QRight"]),
+                _paragraph(currency_amount(line.line_total), styles["QRight"]),
             ]
         )
     table = Table(
@@ -184,15 +203,17 @@ def render_proposal_pdf(version: QuoteVersion, *, client_name: str, brief_refere
         ("Subtotal", version.subtotal),
         (f"Discount ({version.discount_percent}%)", -version.discount_amount),
         (f"Contingency ({version.contingency_percent}%)", version.contingency_amount),
-        (f"Tax ({version.tax_percent}%)", version.tax_amount),
+        (f"{identity['tax_label']} ({version.tax_percent}%)", version.tax_amount),
         ("Total", version.total),
     ]
     total_block = []
     for label, amount in totals:
         style = styles["QHeading"] if label == "Total" else styles["QRight"]
-        total_block.append(_paragraph(f"{label}: ${amount:,.2f}", style))
+        total_block.append(_paragraph(f"{label}: {currency} {amount:,.2f}", style))
     story.append(KeepTogether(total_block))
     story.append(Spacer(1, 0.2 * inch))
+    story.append(_paragraph(identity["footer_note"], styles["QSmall"]))
+    story.append(_paragraph(f"Catalog version {version.catalog_version_id} / Content {version.content_hash[:10]}", styles["QSmall"]))
     story.append(
         _paragraph(
             "Acceptance through the review page records a workflow acknowledgement, not a certified electronic signature.",

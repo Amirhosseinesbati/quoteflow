@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from typing import Protocol
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 from .config import Settings
 
@@ -205,7 +205,7 @@ class ConnectedExtractor:
         from langchain_openai import ChatOpenAI
 
         self.model = ChatOpenAI(
-            model=settings.openai_model, api_key=settings.openai_api_key, timeout=30, max_retries=2
+            model=settings.openai_model, api_key=SecretStr(settings.openai_api_key), timeout=30, max_retries=2
         ).with_structured_output(ExtractedBrief)
 
     def extract(self, text: str, service_names: list[str]) -> ExtractedBrief:

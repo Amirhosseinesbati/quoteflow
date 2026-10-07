@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "pages": 2,
+  "identical_theme_bytes": true,
+  "sha256": "19d2e955fdecb95f8a014606e796e7f6e363691f4f8bf6e5c86a2792444f2d85",
+  "content_assertions": [
+    "Aster Systems",
+    "Northstar Studio",
+    "VAT",
+    "EUR",
+    "Milestones",
+    "Terms"
+  ],
+  "visual_inspection": "passed: both final-renderer pages visually inspected; no clipping or overlap in this Latin-content fixture",
+  "limitations": [
+    "Latin content fixture only; non-Latin fonts unverified"
+  ]
+}

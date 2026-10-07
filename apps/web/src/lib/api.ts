@@ -1,7 +1,7 @@
 import type {
   Approval, Brief, Catalog, CatalogService, Clarification, Health, PortalData,
   PricePreview, Proposal, PublishResult, Quote, QuoteDiff, QuoteLineEdit, QuoteVersion,
-  Role, Session, Workspace,
+  Role, Session, Workspace, StudioProfile, StudioSettings,
 } from './types'
 
 const baseUrl = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
@@ -23,6 +23,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     },
   })
   if (!response.ok) {
+    if (response.status === 401 && !path.startsWith('/auth/')) window.dispatchEvent(new Event('quoteflow-session-expired'))
     let message = `Request failed (${response.status})`
     try {
       const error = await response.json() as { detail?: string | Array<{ msg?: string }> }
@@ -39,6 +40,11 @@ const segment = (value: string) => encodeURIComponent(value)
 
 export const api = {
   health: () => request<Health>('/health'),
+  me: () => request<Session>('/auth/me'),
+  logout: () => request<{ status: string }>('/auth/logout', { method: 'POST' }),
+  login: (email: string, password: string) => request<Session>('/auth/login', { method: 'POST', body: json({ email, password }) }),
+  studioSettings: () => request<StudioProfile>('/studio-settings'),
+  saveStudioSettings: (settings: StudioSettings, expected_revision: number) => request<StudioProfile>('/studio-settings', { method: 'PUT', body: json({ settings, expected_revision }) }),
   demoLogin: (workspace: Workspace, role: Role) => request<Session>('/auth/demo', {
     method: 'POST', body: json({ workspace, role }),
   }),
@@ -79,7 +85,7 @@ export const api = {
   publishVersion: (quoteId: string, versionId: string) => request<PublishResult>(`/quotes/${segment(quoteId)}/versions/${segment(versionId)}/publish`, { method: 'POST' }),
   pdfUrl: (quoteId: string, versionId: string) => `${baseUrl}/quotes/${segment(quoteId)}/versions/${segment(versionId)}/pdf`,
   quoteDiff: (quoteId: string, from: string, to: string) => request<QuoteDiff>(`/quotes/${segment(quoteId)}/diff?from=${segment(from)}&to=${segment(to)}`),
-  getCatalog: () => request<Catalog>('/catalog'),
+  getCatalog: (versionId?: string) => request<Catalog>(`/catalog${versionId ? `?version_id=${segment(versionId)}` : ''}`),
   createService: (body: Omit<CatalogService, 'id'>) => request<Catalog>('/catalog/services', { method: 'POST', body: json(body) }),
   updateService: (id: string, body: Partial<Omit<CatalogService, 'id'>>) => request<Catalog>(`/catalog/services/${segment(id)}`, {
     method: 'PATCH', body: json(body),

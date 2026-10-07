@@ -1,0 +1,269 @@
+{
+  "files": [
+    {
+      "source": "tmp\\theme-qa\\01-entry-dark.png",
+      "file": "01-entry-dark.png",
+      "sha256": "5396441a5a63092790ef8b2198e2a394ee8087f62370f9e679595af9a49342d6",
+      "bytes": 78845
+    },
+    {
+      "source": "tmp\\theme-qa\\02-entry-light.png",
+      "file": "02-entry-light.png",
+      "sha256": "d34fba573fc4b20985870dc7a113242f0f32d8f678f115bf913b10f9758922dc",
+      "bytes": 79524
+    },
+    {
+      "source": "tmp\\theme-qa\\03-intake-dark.png",
+      "file": "03-intake-dark.png",
+      "sha256": "728e54dcad172f1e94cbd8ee90d2fc6369e491aa1a69f56bba8212011e6f212c",
+      "bytes": 110765
+    },
+    {
+      "source": "tmp\\theme-qa\\04-intake-light.png",
+      "file": "04-intake-light.png",
+      "sha256": "998ce32d8094abcd2c6a0a6a8be1ab448178cb05adc49d5b100dbf289f451b05",
+      "bytes": 115008
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-dark-viewport.png",
+      "file": "05-workbench-dark-viewport.png",
+      "sha256": "77d972ef8c04f633abcfadef84572db8dd6507c6213d53f6f34c7bea7c7289ae",
+      "bytes": 131968
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-dark.png",
+      "file": "05-workbench-dark.png",
+      "sha256": "26dce7d62ba0bc48600e4badf829660baaa3197c52fe6e29c1de7e4f3a418d1a",
+      "bytes": 255994
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-light-viewport.png",
+      "file": "05-workbench-light-viewport.png",
+      "sha256": "0690f5824e6176f4c8dfe8f69fffe54328177f0bb38cc34019d58b931a3edbe9",
+      "bytes": 137198
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-light.png",
+      "file": "05-workbench-light.png",
+      "sha256": "bdd7589bb3580135ed56fa61da3975f836302f2ae365eddeb0d450861945daea",
+      "bytes": 265991
+    },
+    {
+      "source": "tmp\\theme-qa\\06-workbench-mobile-dark-viewport.png",
+      "file": "06-workbench-mobile-dark-viewport.png",
+      "sha256": "94cd1d62a1bb1d0781459187d8e22d9b5b052e907a21cb4262a5a55101a5108d",
+      "bytes": 48825
+    },
+    {
+      "source": "tmp\\theme-qa\\06-workbench-mobile-dark.png",
+      "file": "06-workbench-mobile-dark.png",
+      "sha256": "cd1cbbf7f4a947120e45b985da275c7655b76596fafe05a4dba570d60b4d2783",
+      "bytes": 201186
+    },
+    {
+      "source": "tmp\\theme-qa\\06-workbench-mobile-light-viewport.png",
+      "file": "06-workbench-mobile-light-viewport.png",
+      "sha256": "829ccd7e93769185d20691ea736fa25429ac20138f08e799b2df19b7d7b3b436",
+      "bytes": 48804
+    },
+    {
+      "source": "tmp\\theme-qa\\06-workbench-mobile-light.png",
+      "file": "06-workbench-mobile-light.png",
+      "sha256": "281f973e0e3237b6d8273b2a8ec7c41c2fd43d3ab765b135d9699739e0faee83",
+      "bytes": 205683
+    },
+    {
+      "source": "tmp\\theme-qa\\07-editor-dark.png",
+      "file": "07-editor-dark.png",
+      "sha256": "248f7e2cc821d51116db4387d8ee756d907a66336086ae125b7eeb800ce62c56",
+      "bytes": 223422
+    },
+    {
+      "source": "tmp\\theme-qa\\07-editor-light.png",
+      "file": "07-editor-light.png",
+      "sha256": "41ec03a6ad2ff11ed23ffaa630bc4d95a1ad3399c35cf7f8359e8ef04ae76a1c",
+      "bytes": 229901
+    },
+    {
+      "source": "tmp\\theme-qa\\08-price-error-mobile-dark.png",
+      "file": "08-price-error-mobile-dark.png",
+      "sha256": "4a0a9147bbd6af59c569adbfc9a4552d7110da92881992347e70e0a56d536768",
+      "bytes": 177357
+    },
+    {
+      "source": "tmp\\theme-qa\\08-price-error-mobile-light.png",
+      "file": "08-price-error-mobile-light.png",
+      "sha256": "28cd87f8ada8f3517d5bfb1f974760cc676f2e4cc8ca7b0a9f5e56df66a92519",
+      "bytes": 180489
+    },
+    {
+      "source": "tmp\\theme-qa\\09-approval-dialog-dark.png",
+      "file": "09-approval-dialog-dark.png",
+      "sha256": "7d19c1b57d5596e06763b61e60b71358670231d396e31e24e30baeb4ac5f20a9",
+      "bytes": 144910
+    },
+    {
+      "source": "tmp\\theme-qa\\10-customer-mobile-dark.png",
+      "file": "10-customer-mobile-dark.png",
+      "sha256": "a1a9170d1368b8b52c34becfc96cad24182cdc974ac1ade9be843cf00d99068e",
+      "bytes": 124922
+    },
+    {
+      "source": "tmp\\theme-qa\\10-customer-mobile-light.png",
+      "file": "10-customer-mobile-light.png",
+      "sha256": "e11276d580eac088a2196ea98394980fe355100c0ebe335ab6bc569d372068b9",
+      "bytes": 128334
+    },
+    {
+      "source": "tmp\\theme-qa\\11-customer-accepted-light.png",
+      "file": "11-customer-accepted-light.png",
+      "sha256": "9639ed7731f0f73f50a228d8397f73ea8fe85b6a63ccbe44885089e9c65744fe",
+      "bytes": 130206
+    },
+    {
+      "source": "tmp\\theme-qa\\12-settings-dark.png",
+      "file": "12-settings-dark.png",
+      "sha256": "868553fd77d744f320a4925114e2b7ec1aca1dea70af98edd68d7392edef36ff",
+      "bytes": 123573
+    },
+    {
+      "source": "tmp\\theme-qa\\12-settings-light.png",
+      "file": "12-settings-light.png",
+      "sha256": "338c01d77997167154cee8dce759f6c40f79240e4cbbe71d0c4e690e6f1ce822",
+      "bytes": 129554
+    },
+    {
+      "source": "tmp\\theme-qa\\13-catalog-dark.png",
+      "file": "13-catalog-dark.png",
+      "sha256": "453f8cae9c7a6d554698e4981016af108f5dde6026b1b5e6c9d4626a5c3cb02e",
+      "bytes": 364530
+    },
+    {
+      "source": "tmp\\theme-qa\\13-catalog-light.png",
+      "file": "13-catalog-light.png",
+      "sha256": "56bd64ba5d6ce66459273b67b048299317abf1af6468d0b3e3d9e79de7b0017c",
+      "bytes": 370814
+    },
+    {
+      "source": "tmp\\theme-qa\\14-briefs-dark.png",
+      "file": "14-briefs-dark.png",
+      "sha256": "d50d2951dfc7d73d8a54b5d89ae28c3a5500c2771ea3d6ee4f747e25a5c966e5",
+      "bytes": 109063
+    },
+    {
+      "source": "tmp\\theme-qa\\14-briefs-light.png",
+      "file": "14-briefs-light.png",
+      "sha256": "7c4ecac53166b0314ceafbd17fc79c528bd32e1a34f5e0c371c7dcb90bdb794f",
+      "bytes": 153162
+    },
+    {
+      "source": "tmp\\theme-qa\\15-server-error-light.png",
+      "file": "15-server-error-light.png",
+      "sha256": "635cb196955af45b31531d5dc09b4e671ae8cd3add5ba1ce42cf4709fd4fcf20",
+      "bytes": 52011
+    },
+    {
+      "source": "tmp\\theme-qa\\pdf-result.json",
+      "file": "pdf-result.json",
+      "sha256": "9bdaf85183b219bcf0d5bf45edec662235187ac20f09843a81f44488af8cb040",
+      "bytes": 510
+    },
+    {
+      "source": "tmp\\theme-qa\\proposal-dark.pdf",
+      "file": "proposal-dark.pdf",
+      "sha256": "19d2e955fdecb95f8a014606e796e7f6e363691f4f8bf6e5c86a2792444f2d85",
+      "bytes": 4914
+    },
+    {
+      "source": "tmp\\theme-qa\\proposal-light.pdf",
+      "file": "proposal-light.pdf",
+      "sha256": "19d2e955fdecb95f8a014606e796e7f6e363691f4f8bf6e5c86a2792444f2d85",
+      "bytes": 4914
+    },
+    {
+      "source": "tmp\\theme-qa\\proposal-page-1.png",
+      "file": "proposal-page-1.png",
+      "sha256": "52f8c8d9477023b95e19a6821a117599ffc57e2769205c0b57be152f23da9494",
+      "bytes": 104505
+    },
+    {
+      "source": "tmp\\theme-qa\\proposal-page-2.png",
+      "file": "proposal-page-2.png",
+      "sha256": "f69346b7cfb9c39d1aa27fa3494bd70a2455afc8a1ebad8c6374b4667ba86d3c",
+      "bytes": 141260
+    },
+    {
+      "source": "tmp\\theme-qa\\result.json",
+      "file": "result.json",
+      "sha256": "c570931352e825614d616c9f37eb5fe2979d0a5a2700abdfb2622ccf5e6577b1",
+      "bytes": 3111
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-dark-viewport.png",
+      "file": "QuoteFlow-dark-workbench.png",
+      "sha256": "77d972ef8c04f633abcfadef84572db8dd6507c6213d53f6f34c7bea7c7289ae",
+      "bytes": 131968
+    },
+    {
+      "source": "tmp\\theme-qa\\05-workbench-light-viewport.png",
+      "file": "QuoteFlow-light-workbench.png",
+      "sha256": "0690f5824e6176f4c8dfe8f69fffe54328177f0bb38cc34019d58b931a3edbe9",
+      "bytes": 137198
+    },
+    {
+      "source": "tmp\\theme-qa\\06-workbench-mobile-dark-viewport.png",
+      "file": "QuoteFlow-mobile-workbench.png",
+      "sha256": "94cd1d62a1bb1d0781459187d8e22d9b5b052e907a21cb4262a5a55101a5108d",
+      "bytes": 48825
+    },
+    {
+      "source": "tmp\\customization-qa\\result.json",
+      "file": "customization-result.json",
+      "sha256": "20d86fd925d02bef158da3e74eafe57abd38f70988c429c8793ba9714c03d8ad",
+      "bytes": 504
+    },
+    {
+      "source": "tmp\\customization-qa\\09-viewer-settings-desktop.png",
+      "file": "auth-viewer-settings-dark.png",
+      "sha256": "9e65c59951f79f7d8e7b5a62755ccb58ace3f332a665446f7f57cf332c36dac7",
+      "bytes": 129884
+    },
+    {
+      "source": "tmp\\customization-qa\\10-connected-auth-desktop.png",
+      "file": "auth-connected-entry-dark.png",
+      "sha256": "6171afb6d4fc370cabe3b6f967065a751a729baf0b325b9674edcb4c75300f14",
+      "bytes": 21914
+    },
+    {
+      "source": "tmp\\customization-qa\\11-offline-entry-mobile.png",
+      "file": "auth-offline-entry-mobile-dark.png",
+      "sha256": "67ee2497fca70717b7cf7d676318ba61a4d78e4be8f64073be18017e58593a69",
+      "bytes": 31446
+    },
+    {
+      "source": "tmp\\browser-check-dark\\04b-customer-clarification-1024.png",
+      "file": "journey-dark-clarification.png",
+      "sha256": "adad2d4086f12e2a3089dfcbae9d5239444d6f7de7a5982da0493fbcf511f4ed",
+      "bytes": 55005
+    },
+    {
+      "source": "tmp\\browser-check-dark\\10-accepted-mobile-390.png",
+      "file": "journey-dark-accepted-mobile.png",
+      "sha256": "399ddf00feab20dfd45987a95da51758c83b4cdab15724da5adbd7ce1c0b8e7b",
+      "bytes": 139320
+    },
+    {
+      "source": "tmp\\browser-check-light\\04b-customer-clarification-1024.png",
+      "file": "journey-light-clarification.png",
+      "sha256": "ec65deafed78cbd7e44df7da4f047a5c4c319eb3bb2fb03d67666a953713252a",
+      "bytes": 56775
+    },
+    {
+      "source": "tmp\\browser-check-light\\10-accepted-mobile-390.png",
+      "file": "journey-light-accepted-mobile.png",
+      "sha256": "294e02e276069b0fe619340c1e9763ec62123a2b59ffa9f81891b84b68343699",
+      "bytes": 143066
+    }
+  ],
+  "originals_retained": true
+}

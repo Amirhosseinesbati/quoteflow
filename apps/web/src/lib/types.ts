@@ -8,6 +8,7 @@ export interface Session {
 }
 
 export interface Health {
+  synthetic: boolean
   status: string
   mode: string
 }
@@ -46,6 +47,7 @@ export interface Brief {
 }
 
 export interface Proposal {
+  _document?: StudioSettings & { synthetic: boolean }
   executive_summary: string
   objectives: string | string[]
   scope: string | string[]
@@ -56,9 +58,10 @@ export interface Proposal {
   milestones: string | string[]
   client_responsibilities: string | string[]
   acceptance_steps: string | string[]
+  terms?: string | string[]
 }
 
-export type ProposalField = keyof Proposal
+export type ProposalField = Exclude<keyof Proposal, '_document'>
 
 export interface QuoteLine {
   id: string
@@ -96,6 +99,8 @@ export interface QuoteVersion {
   approved: boolean
   created_at?: string
   catalog_version?: string | number
+  catalog_version_id: string
+  content_hash: string
 }
 
 export interface Quote {
@@ -118,6 +123,7 @@ export interface PricePreview {
 }
 
 export interface Approval {
+  currency?: string
   id: string
   quote_version_id: string
   status: string
@@ -141,9 +147,25 @@ export interface CatalogService {
 }
 
 export interface Catalog {
-  version: string | number
+  version: { id: string; number: number }
   services: CatalogService[]
 }
+
+export interface StudioSettings {
+  studio_name: string
+  accent_color: string
+  currency: 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'CHF'
+  tax_label: string
+  default_tax_percent: string
+  default_contingency_percent: string
+  approval_discount_threshold: string
+  title_template: string
+  summary_template: string
+  terms: string
+  footer_note: string
+}
+
+export interface StudioProfile { settings: StudioSettings; revision: number }
 
 export interface PublishResult {
   token: string
@@ -152,6 +174,8 @@ export interface PublishResult {
 }
 
 export interface PortalClarification {
+  synthetic: boolean
+  studio_name?: string
   kind: 'clarification'
   brief: Brief
   clarifications: Clarification[]
@@ -161,6 +185,7 @@ export interface PortalClarification {
 }
 
 export interface PortalReview {
+  synthetic: boolean
   kind: 'review'
   quote_version: QuoteVersion
   client_name: string

@@ -18,7 +18,7 @@ def initialize_schema() -> None:
     config = Config(str(Path(__file__).resolve().parents[2] / "alembic.ini"))
     tables = set(inspect(engine).get_table_names())
     if tables and "alembic_version" not in tables:
-        if set(Base.metadata.tables).issubset(tables):
+        if (set(Base.metadata.tables) - {"workspace_preferences"}).issubset(tables):
             columns = {column["name"] for column in inspect(engine).get_columns("outbox_events")}
             line_columns = {column["name"] for column in inspect(engine).get_columns("quote_lines")}
             if "next_attempt_at" in columns and "position" in line_columns:
@@ -27,7 +27,7 @@ def initialize_schema() -> None:
                     if column["name"] == "status"
                 )
                 revision = (
-                    "head"
+                    ("head" if "workspace_preferences" in tables else "a4b1c9d2e3f4")
                     if (getattr(job_status["type"], "length", 0) or 0) >= 64
                     else "6b8d7ac31570"
                 )

@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 
 const projectRoot = resolve(fileURLToPath(new URL('../../../', import.meta.url)))
-const screenshotDir = join(projectRoot, 'tmp', 'browser-check')
+const theme = process.env.QUOTEFLOW_THEME
+const screenshotDir = join(projectRoot, 'tmp', theme ? `browser-check-${theme}` : 'browser-check')
 await mkdir(screenshotDir, { recursive: true })
 const baseUrl = process.env.QUOTEFLOW_URL || 'http://127.0.0.1:5173/'
 const browser = await chromium.launch({
@@ -12,6 +13,7 @@ const browser = await chromium.launch({
   headless: true,
 })
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 })
+if (theme) await page.context().addInitScript((mode) => { try { localStorage.setItem('quoteflow-theme', mode) } catch { /* about:blank has no origin */ } }, theme)
 const errors = []
 page.on('pageerror', (error) => errors.push(error.message))
 
@@ -64,6 +66,7 @@ try {
   const clarificationLink = await page.locator('a[href*="/portal/"]').last().getAttribute('href')
   if (!clarificationLink) throw new Error('Customer clarification link was not rendered')
   const customerContext = await browser.newContext({ viewport: { width: 1024, height: 900 } })
+  if (theme) await customerContext.addInitScript((mode) => { try { localStorage.setItem('quoteflow-theme', mode) } catch { /* about:blank has no origin */ } }, theme)
   const customerPage = await customerContext.newPage()
   customerPage.on('pageerror', (error) => errors.push(error.message))
   try {
@@ -104,7 +107,7 @@ try {
   await shot('06b-after-save-1024.png', 1024)
   if (await page.locator('.alert.error').count()) throw new Error(`Version save failed: ${await page.locator('.alert.error').first().innerText()}`)
   await page.getByRole('tab', { name: 'Scope diff' }).click()
-  const previousRecommended = await page.locator('#compare-version option').filter({ hasText: 'Version 2 · Recommended' }).getAttribute('value')
+  const previousRecommended = await page.locator('#compare-version option').filter({ hasText: /Version 2.*Recommended/ }).getAttribute('value')
   if (!previousRecommended) throw new Error('Previous recommended version is unavailable for comparison')
   await page.locator('#compare-version').selectOption(previousRecommended)
   await page.getByText('Changed services').waitFor()

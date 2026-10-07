@@ -1,7 +1,7 @@
-export function money(value: string | number | null | undefined): string {
+export function money(value: string | number | null | undefined, currency = 'USD'): string {
   const number = Number(value ?? 0)
   if (!Number.isFinite(number)) return '—'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(number)
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 2 }).format(number)
 }
 
 export function shortDate(value?: string | null): string {

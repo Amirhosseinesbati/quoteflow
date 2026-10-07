@@ -6,6 +6,7 @@ import hashlib
 import json
 from datetime import date, datetime
 from pathlib import Path
+from typing import Any
 
 from pwdlib import PasswordHash
 from sqlalchemy import select
@@ -93,7 +94,7 @@ def seed_demo(
                         role=role,
                     )
                 )
-    catalog_data = (
+    catalog_data: list[dict[str, Any]] = (
         _load(path, "catalog")
         if full
         else (

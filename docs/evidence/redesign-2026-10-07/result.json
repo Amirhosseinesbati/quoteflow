@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "screenshots": 27,
+  "pageErrors": [],
+  "checks": [
+    "fresh Dark fallback, persistence, explicit OS independence, live System, intact intake edits",
+    "document palette/geometry invariant, keyboard tabs, quote edits/pricing preserved, no theme writes, server error, native dialog, approval state, identical PDF bytes",
+    "customer route and response draft preserved; actual acceptance/handoff",
+    "all preferences applied before React under self-only script CSP, invalid preference fallback, blocked storage usable, reduced motion, error retry screen, contrast sampling"
+  ],
+  "contrastResults": [
+    {
+      "name": "entry-light",
+      "sampled": 8,
+      "minimumRatio": 5.54,
+      "failures": []
+    },
+    {
+      "name": "intake-dark",
+      "sampled": 19,
+      "minimumRatio": 6.71,
+      "failures": []
+    },
+    {
+      "name": "intake-light",
+      "sampled": 19,
+      "minimumRatio": 5.54,
+      "failures": []
+    },
+    {
+      "name": "workbench-dark",
+      "sampled": 65,
+      "minimumRatio": 5.6,
+      "failures": []
+    },
+    {
+      "name": "workbench-light",
+      "sampled": 65,
+      "minimumRatio": 5.54,
+      "failures": []
+    },
+    {
+      "name": "editor-dark",
+      "sampled": 59,
+      "minimumRatio": 6.71,
+      "failures": []
+    },
+    {
+      "name": "editor-light",
+      "sampled": 59,
+      "minimumRatio": 5.54,
+      "failures": []
+    },
+    {
+      "name": "customer-dark",
+      "sampled": 40,
+      "minimumRatio": 5.6,
+      "failures": []
+    },
+    {
+      "name": "customer-light",
+      "sampled": 40,
+      "minimumRatio": 5.6,
+      "failures": []
+    },
+    {
+      "name": "settings-dark",
+      "sampled": 27,
+      "minimumRatio": 5.6,
+      "failures": []
+    },
+    {
+      "name": "settings-light",
+      "sampled": 27,
+      "minimumRatio": 5.54,
+      "failures": []
+    },
+    {
+      "name": "catalog-dark",
+      "sampled": 10,
+      "minimumRatio": 6.71,
+      "failures": []
+    },
+    {
+      "name": "catalog-light",
+      "sampled": 10,
+      "minimumRatio": 5.54,
+      "failures": []
+    }
+  ],
+  "briefId": "60f0383a-1720-4a7a-ba8c-5402bfeb7938",
+  "quoteId": "d9bd5c6d-9545-4a1c-a9da-27bfdc4d7b49",
+  "revisionId": "5f015c16-2a82-4697-94f7-c303ea85b790",
+  "approvalId": "d17b72e9-fd91-451f-802f-a79d32af7cdb",
+  "shots": [
+    "01-entry-dark",
+    "02-entry-light",
+    "03-intake-dark",
+    "04-intake-light",
+    "05-workbench-dark",
+    "05-workbench-dark-viewport",
+    "06-workbench-mobile-dark",
+    "06-workbench-mobile-dark-viewport",
+    "05-workbench-light",
+    "05-workbench-light-viewport",
+    "06-workbench-mobile-light",
+    "06-workbench-mobile-light-viewport",
+    "07-editor-dark",
+    "07-editor-light",
+    "08-price-error-mobile-dark",
+    "08-price-error-mobile-light",
+    "09-approval-dialog-dark",
+    "10-customer-mobile-dark",
+    "10-customer-mobile-light",
+    "11-customer-accepted-light",
+    "12-settings-dark",
+    "12-settings-light",
+    "13-catalog-dark",
+    "13-catalog-light",
+    "14-briefs-dark",
+    "14-briefs-light",
+    "15-server-error-light"
+  ]
+}

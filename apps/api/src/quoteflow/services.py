@@ -29,6 +29,7 @@ from .models import (
 from .pricing import PricingError, calculate, content_hash, decimal
 from .proposals import draft_proposal, estimate_quantity, match_services
 from .schemas import VersionEdit
+from .studio import document_settings, document_snapshot, studio_settings
 
 
 def timestamp(value: datetime | None) -> str | None:
@@ -232,7 +233,8 @@ def _make_version(
     tax_percent: str = "0",
     contingency_percent: str = "0",
 ) -> QuoteVersion:
-    settings = get_settings()
+    studio, _ = studio_settings(db, quote.workspace_id)
+    proposal = {"_document": document_snapshot(studio), **proposal}
     try:
         priced = calculate(
             line_data,
@@ -244,7 +246,7 @@ def _make_version(
         raise HTTPException(422, str(exc)) from exc
     noncatalog = any(not line.get("service_id") for line in priced["lines"])
     approval_required = noncatalog or decimal(priced["discount_percent"]) > decimal(
-        settings.approval_discount_threshold
+        studio.approval_discount_threshold
     )
     version = QuoteVersion(
         quote_id=quote.id,
@@ -283,12 +285,15 @@ def generate_options(db: Session, brief: Brief) -> dict:
         analyze_brief(db, brief)
     # The brief lock serializes first-time quote creation; existing quote edits
     # use the same quote-row lock as publication and customer responses.
-    brief = db.scalar(
+    locked_brief = db.scalar(
         select(Brief)
         .where(Brief.id == brief.id, Brief.workspace_id == brief.workspace_id)
         .with_for_update()
         .execution_options(populate_existing=True)
     )
+    if locked_brief is None:
+        raise HTTPException(404, "Brief not found")
+    brief = locked_brief
     if any(c.status == "open" for c in brief.clarifications):
         raise HTTPException(
             409, "Answer or close the open clarification questions before generating options"
@@ -346,8 +351,8 @@ def generate_options(db: Session, brief: Brief) -> dict:
             proposal=proposal,
             line_data=lines,
             catalog_version_id=catalog_version.id,
-            tax_percent=get_settings().default_tax_percent,
-            contingency_percent=get_settings().default_contingency_percent,
+            tax_percent=studio_settings(db, brief.workspace_id)[0].default_tax_percent,
+            contingency_percent=studio_settings(db, brief.workspace_id)[0].default_contingency_percent,
         )
         versions.append(version)
     quote.status = "options_ready"
@@ -369,6 +374,8 @@ def record_clarification_answer(db: Session, item: Clarification, answer: str) -
         .with_for_update()
         .execution_options(populate_existing=True)
     )
+    if brief is None:
+        raise HTTPException(404, "Brief not found")
     db.refresh(item)
     if item.answer == normalized:
         return item
@@ -403,7 +410,7 @@ def record_clarification_answer(db: Session, item: Clarification, answer: str) -
             key=lambda version: version.number,
             default=max(quote.versions, key=lambda version: version.number),
         )
-        proposal = dict(base.proposal)
+        proposal = {"_document": document_settings(base.proposal), **base.proposal}
         assumptions = list(proposal.get("assumptions", []))
         assumptions = [
             value
@@ -503,7 +510,7 @@ def preview_version(db: Session, version: QuoteVersion, edit: VersionEdit) -> di
         raise HTTPException(422, str(exc)) from exc
     priced["approval_required"] = any(not line.get("service_id") for line in line_data) or decimal(
         priced["discount_percent"]
-    ) > decimal(get_settings().approval_discount_threshold)
+    ) > decimal(studio_settings(db, version.quote.workspace_id)[0].approval_discount_threshold)
     return priced
 
 
@@ -512,8 +519,17 @@ def replace_version(db: Session, quote: Quote, version: QuoteVersion, edit: Vers
         raise HTTPException(409, "Accepted quote is immutable")
     if version.status in ("superseded", "rejected"):
         raise HTTPException(409, "This option has been replaced")
+    if edit.proposal is not None:
+        for key, value in edit.proposal.items():
+            if key == "_document":
+                if value != version.proposal.get("_document"):
+                    raise HTTPException(422, "Document identity is frozen; generate new options to apply studio settings")
+            elif not isinstance(value, str | list) or (
+                isinstance(value, list) and any(not isinstance(item, str) for item in value)
+            ):
+                raise HTTPException(422, "Proposal sections must contain text or a list of text")
     preview = preview_version(db, version, edit)
-    proposal = {**version.proposal, **(edit.proposal or {})}
+    proposal = {"_document": document_settings(version.proposal), **version.proposal, **(edit.proposal or {})}
     new_version = _make_version(
         db,
         quote,

@@ -13,6 +13,8 @@ const normalized = Object.fromEntries(Object.entries(schema.paths || {}).map(([p
 
 const expected = [
   ['get', '/api/health'], ['post', '/api/auth/demo'],
+  ['get', '/api/auth/me'], ['post', '/api/auth/logout'], ['post', '/api/auth/login'],
+  ['get', '/api/studio-settings'], ['put', '/api/studio-settings'],
   ['get', '/api/briefs'], ['post', '/api/briefs'], ['post', '/api/briefs/upload'],
   ['get', '/api/briefs/{}'], ['post', '/api/briefs/{}/analyze'],
   ['post', '/api/briefs/{}/clarifications'], ['post', '/api/briefs/{}/clarifications/{}/answer'],
@@ -36,10 +38,12 @@ if (!hasShape(['source_type','text','company_name','contact_name','contact_email
 if (!hasShape(['proposal','lines','discount_percent','tax_percent','contingency_percent'])) missing.push('VersionEdit request fields')
 if (!hasShape(['code','name','category','description','unit','base_price','active'])) missing.push('ServiceEdit request fields')
 if (!hasShape(['decision','comment'])) missing.push('PortalDecision request fields')
+if (!hasShape(['settings','expected_revision'])) missing.push('StudioUpdate request fields')
+if (!hasShape(['studio_name','accent_color','currency','tax_label','default_tax_percent','default_contingency_percent','approval_discount_threshold','title_template','summary_template','terms','footer_note'])) missing.push('StudioSettings request fields')
 
 if (missing.length) {
   console.error(`OpenAPI/client drift (${missing.length}):\n${missing.map((item) => `  - ${item}`).join('\n')}`)
   process.exitCode = 1
 } else {
-  console.log(`OpenAPI contract check passed: ${expected.length} route methods and 4 write payload shapes (${source})`)
+  console.log(`OpenAPI contract check passed: ${expected.length} route methods and 6 request payload shapes (${source})`)
 }
